@@ -1,0 +1,44 @@
+BACKUP ~apr_fix/backup~
+AUTHOR ~SubtleD~
+
+
+BEGIN ~spell item APR fix~
+DESIGNATED 1
+
+COPY_EXISTING_REGEXP GLOB ~.*\.itm~ ~override~
+	PATCH_IF (~%SOURCE_SIZE%~ > ~0x71~) BEGIN
+		READ_SHORT 0x1c ammo
+		PATCH_IF (%ammo% = 24 || %ammo% = 31 || %ammo% = 14 || %ammo% = 5 || %ammo% = 16 || %ammo% = 21 || %ammo% = 25) BEGIN
+			READ_SHORT 0x96 used_up
+			PATCH_IF (%used_up% = 1) BEGIN
+				WRITE_SHORT 0x96 2
+			END
+		END
+	END
+BUT_ONLY
+
+COPY_EXISTING ~spwi325.spl~ ~override~
+			~spwi920.spl~ ~override~
+			~sppr721.spl~ ~override~
+	LPF ALTER_EFFECT INT_VAR match_opcode=111 opcode=255 timing=0 duration=0 END
+BUT_ONLY
+
+COPY_EXISTING ~melfmet.itm~ ~override~
+	WRITE_LONG 0x10 0
+	WRITE_LONG 0x14 0
+	WRITE_BYTE 0x18 (THIS | 0b00000100)
+	WRITE_BYTE 0x1e (THIS | 0b10000000)
+	WRITE_BYTE 0x1f (THIS | 0b01011110)
+	WRITE_BYTE 0x18 (THIS | 0b01110010)
+	WRITE_BYTE 0x18 (THIS | 0b01100000)
+BUT_ONLY
+
+COPY_EXISTING ~eneblade.itm~ ~override~
+	WRITE_LONG 0x10 0
+	WRITE_LONG 0x14 0
+	WRITE_BYTE 0x18 (THIS | 0b00000100)
+	WRITE_BYTE 0x1e (THIS | 0b01000000)
+	WRITE_BYTE 0x1f (THIS | 0b00001000)
+	WRITE_BYTE 0x18 (THIS | 0b01110010)
+	WRITE_BYTE 0x18 (THIS | 0b00100000)
+BUT_ONLY
