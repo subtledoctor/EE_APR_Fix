@@ -5,40 +5,88 @@ AUTHOR ~SubtleD~
 BEGIN ~spell item APR fix~
 DESIGNATED 1
 
+//___changed all fired/thrown weapons to use "replace with used up"________________
 COPY_EXISTING_REGEXP GLOB ~.*\.itm~ ~override~
 	PATCH_IF (~%SOURCE_SIZE%~ > ~0x71~) BEGIN
 		READ_SHORT 0x1c ammo
 		PATCH_IF (%ammo% = 24 || %ammo% = 31 || %ammo% = 14 || %ammo% = 5 || %ammo% = 16 || %ammo% = 21 || %ammo% = 25) BEGIN
 			READ_SHORT 0x96 used_up
-			PATCH_IF (%used_up% = 1) BEGIN
-				WRITE_SHORT 0x96 2
+			PATCH_IF (%used_up% = 1) BEGIN    // if currently set to "item vanishes" ...
+				WRITE_SHORT 0x96 2            // ...then set it to "replaced with used up
+				WRITE_LONG 0x10 0             // and make sure that...
+				WRITE_LONG 0x14 0             // ..."used up item" is set to "none"
 			END
 		END
 	END
 BUT_ONLY
+//_________________________________________________________________________________
 
-COPY_EXISTING ~spwi325.spl~ ~override~
-			~spwi920.spl~ ~override~
-			~sppr721.spl~ ~override~
+/*
+//___revert sol's searing orb to original behavior_________________________________
+COPY_EXISTING ~sorb.itm~ ~override~
+	WRITE_SHORT 0x96 1
+BUT_ONLY
+//_________________________________________________________________________________
+*/
+
+//___change MMM, energy blades, & searign orb to create items in inventory_________
+COPY_EXISTING ~spwi325.spl~ ~override~    // melf's minutes meteors
+			~spwi920.spl~ ~override~      // energy blades
+			~sppr721.spl~ ~override~      // energy blades
+			~sppr614.spl~ ~override~      // searing orb
 	LPF ALTER_EFFECT INT_VAR match_opcode=111 opcode=255 timing=0 duration=0 END
 BUT_ONLY
+//_________________________________________________________________________________
 
-COPY_EXISTING ~melfmet.itm~ ~override~
+
+//___set characteristics and usability for MMM & energy blades_____________________
+COPY_EXISTING ~melfmet.itm~ ~override~ // melf's meteors
 	WRITE_LONG 0x10 0
 	WRITE_LONG 0x14 0
-	WRITE_BYTE 0x18 (THIS | 0b00000100)
-	WRITE_BYTE 0x1e (THIS | 0b10000000)
-	WRITE_BYTE 0x1f (THIS | 0b01011110)
-	WRITE_BYTE 0x18 (THIS | 0b01110010)
-	WRITE_BYTE 0x18 (THIS | 0b01100000)
+	WRITE_BYTE 0x18 (THIS | 0b00000100) // sets "droppable" flag to checked
+	WRITE_BYTE 0x18 (THIS & 0b11111101) // added in v1.1 to ensure "2-handed" flag is unchecked
+	WRITE_BYTE 0x1e (THIS | 0b10000000) // unusable by cleric
+	WRITE_BYTE 0x1f (THIS | 0b01011110) // unusable by F/C, F/D, fighter, C/R, and C/T
+	WRITE_BYTE 0x18 (THIS | 0b01110010) // unusable by thief, ranger, paladin, and F/T
+	WRITE_BYTE 0x18 (THIS | 0b01100000) // unusable by druid and monk
 BUT_ONLY
 
-COPY_EXISTING ~eneblade.itm~ ~override~
+COPY_EXISTING ~eneblade.itm~ ~override~ // energy blades
 	WRITE_LONG 0x10 0
 	WRITE_LONG 0x14 0
-	WRITE_BYTE 0x18 (THIS | 0b00000100)
-	WRITE_BYTE 0x1e (THIS | 0b01000000)
-	WRITE_BYTE 0x1f (THIS | 0b00001000)
-	WRITE_BYTE 0x18 (THIS | 0b01110010)
-	WRITE_BYTE 0x18 (THIS | 0b00100000)
+	WRITE_BYTE 0x18 (THIS | 0b00000100) // sets "droppable" flag to checked
+	WRITE_BYTE 0x18 (THIS & 0b11111101) // added in v1.1 to ensure "2-handed" flag is unchecked
+	WRITE_BYTE 0x1e (THIS | 0b01000000) // unusable by bard
+	WRITE_BYTE 0x1f (THIS | 0b00001000) // unusable by fighter
+	WRITE_BYTE 0x18 (THIS | 0b01110010) // unusable by thief, ranger, paladin, and F/T
+	WRITE_BYTE 0x18 (THIS | 0b00100000) // unusable by monk
 BUT_ONLY
+
+COPY_EXISTING ~sorb.itm~ ~override~ // searing orb
+	WRITE_LONG 0x10 0
+	WRITE_LONG 0x14 0
+	WRITE_BYTE 0x18 (THIS | 0b00000100) // sets "droppable" flag to checked
+	WRITE_BYTE 0x18 (THIS & 0b11111101) // added in v1.1 to ensure "2-handed" flag is unchecked
+	WRITE_BYTE 0x1e (THIS | 0b01000000) // unusable by bard
+	WRITE_BYTE 0x1f (THIS | 0b00101000) // unusable by F/M and fighter
+	WRITE_BYTE 0x18 (THIS | 0b01111111) // unusable by thief, ranger, paladin, M/T, mage, F/T, and F/M/T
+	WRITE_BYTE 0x18 (THIS | 0b00100000) // unusable by monk
+//_________________________________________________________________________________
+
+
+//___set searing orb description___________________________________________________
+ACTION_IF GAME_IS ~bg2ee~ BEGIN
+	STRING_SET 38580 ~Sol's Searing Orb
+
+Level: 6
+Range: 90 ft.
+Duration: Instant
+Casting Time: 6
+Area of Effect: 1 creature
+Saving Throw: Special
+
+When the spell is completed, it creates a glowing stone. The priest may hurl the stone at an enemy with a +3 bonus to the attack roll and no penalty for lack of weapon proficiency. The glowing gem can be used to strike any creature, even those hit only by magical weapons, although there is no damage bonus.
+
+If the gem strikes its target, it bursts with a brilliant, searing flash that causes 6d6 points of fire damage to the target and blinds <PRO_HIMHER> for 1d6 rounds. The victim is allowed a Saving Throw vs. Spell for half damage and to avoid being blinded. Undead creatures suffer 12d6 points of fire damage and are blinded for 12 rounds (if applicable) upon a failed Saving Throw; otherwise, they receive 9d6 points of damage and are blinded for 6 rounds.~
+END
+//_________________________________________________________________________________
