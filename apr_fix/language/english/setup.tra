@@ -1,0 +1,14 @@
+@1   = ~spell item APR fix~
+@10  = ~Sol's Searing Orb
+
+Level: 6
+Range: 90 ft.
+Duration: Instant
+Casting Time: 6
+Area of Effect: 1 creature
+Saving Throw: Special
+
+When the spell is completed, it creates a glowing stone. The priest may hurl the stone at an enemy with a +3 bonus to the attack roll and no penalty for lack of weapon proficiency. The glowing gem can be used to strike any creature, even those hit only by magical weapons, although there is no damage bonus.
+
+If the gem strikes its target, it bursts with a brilliant, searing flash that causes 6d6 points of fire damage to the target and blinds <PRO_HIMHER> for 1d6 rounds. The victim is allowed a Saving Throw vs. Spell for half damage and to avoid being blinded. Undead creatures suffer 12d6 points of fire damage and are blinded for 12 rounds (if applicable) upon a failed Saving Throw; otherwise, they receive 9d6 points of damage and are blinded for 6 rounds.~
+
