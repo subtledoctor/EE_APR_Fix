@@ -1,0 +1,13 @@
+@1   = ~poprawka ANR przy przedmiotach rzucających czary~
+@10  = ~Płonąca kula Sola
+
+Poziom: 6
+Zasięg: 30 metrów
+Czas działania: natychmiastowy
+Czas rzucania: 6
+Obszar działania: 1 istota
+Rzut obronny: specjalny
+
+Czar ten tworzy w dłoni kapłana świecący kamień, którym może cisnąć we wroga, z premią +3 do testu ataku i bez kar ze względu na brak biegłości w broni. Kamień ten może zostać użyty do trafienia dowolnej istoty, nawet takiej, która jest odporna na działanie broni magicznych, aczkolwiek rzucający nie otrzymuje premii do obrażeń.
+
+Po trafieniu w cel kamień rozbłyska jasnym parzącym światłem, zadając ofierze 6k6 obrażeń od ognia i oślepiając ją na 1k6 rund. Cel może jednak wykonać rzut obronny przeciw czarom, by otrzymać połowę obrażeń i uniknąć oślepienia. Nieumarli otrzymują, w wypadku nieudanego rzutu obronnego, 12k6 obrażeń od ognia i zostają oślepieni na dwanaście rund (jeśli ich to dotyczy). Rzut obronny powoduje w ich wypadku obniżenie obrażeń do 9k6, a czas trwania oślepienia wyniesie wówczas sześć rund.~

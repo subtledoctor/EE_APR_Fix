@@ -6,6 +6,10 @@ LANGUAGE
   ~English~
   ~english~
   ~apr_fix/language/english/setup.tra~
+LANGUAGE
+  ~Polski (Translation by Cahir)~
+  ~polish~
+  ~apr_fix/language/polish/setup.tra~
 
 
 BEGIN @1
